@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Flour to Door</title>
+
+<style>
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    background: #f8f9fa;
+}
+
+/* HEADER WITH IMAGE */
+header {
+    background: url("farm.jpg") no-repeat center center/cover;
+    height: 300px;
+    position: relative;
+    color: white;
+    text-align: center;
+}
+
+.overlay {
+    background: rgba(0,0,0,0.5);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+header h1 {
+    font-size: 50px;
+    font-weight: bold;
+}
+
+/* NAV */
+nav {
+    background: black;
+    padding: 12px;
+    text-align: center;
+}
+nav a {
+    color: white;
+    margin: 15px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* SECTION */
+section {
+    padding: 40px;
+    margin: 30px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+}
+
+/* CARDS */
+.cards {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.card {
+    width: 200px;
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+    padding: 10px;
+    background: #eef2f7;
+    position: relative;
+    transition: 0.3s;
+}
+.card:hover {
+    transform: scale(1.05);
+}
+.card img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+/* TICK */
+.tick {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: green;
+    color: white;
+    border-radius: 50%;
+    padding: 5px;
+    display: none;
+}
+
+/* INPUT */
+input, select {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+}
+
+/* BUTTON */
+button {
+    padding: 14px;
+    background: black;
+    color: white;
+    border: none;
+    width: 100%;
+}
+
+/* SUMMARY */
+.summary {
+    background: #e9f1ff;
+    padding: 15px;
+    margin-top: 15px;
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+<div class="overlay">
+<h1>🌾 FLOUR TO DOOR 🌾</h1>
+<p>Pure • Safe • Direct from Farmers</p>
+</div>
+</header>
+
+<nav>
+<a href="#about">About</a>
+<a href="#products">Products</a>
+<a href="#order">Order</a>
+<a href="#track">Track</a>
+</nav>
+
+<!-- ABOUT -->
+<section id="about">
+<h2>About Our Service</h2>
+
+<p>
+Flour to Door ensures that every household gets access to fresh, natural, and chemical-free wheat flour. We begin from the roots — literally. Our wheat is cultivated under proper care using safe agricultural practices.
+</p>
+
+<p>
+From soil preparation to harvesting, we maintain strict quality control. Farmers associated with us follow clean and safe farming techniques, ensuring the wheat retains its natural nutrients.
+</p>
+
+<p>
+Once harvested, grains are cleaned, stored, and processed hygienically. No harmful chemicals or preservatives are used at any stage. We remove middlemen and directly connect farmers to consumers, ensuring fair pricing.
+</p>
+
+<p>
+✔ Direct farm sourcing <br>
+✔ No brokerage or middlemen <br>
+✔ Fresh grinding on demand <br>
+✔ Safe and healthy consumption
+</p>
+
+</section>
+
+<!-- PRODUCTS -->
+<section id="products">
+<h2>Select Wheat Type</h2>
+
+<div class="cards">
+
+<div class="card" onclick="selectWheat(this,'Sharbati Wheat')">
+<div class="tick">✔</div>
+<img src="sharbati.jpg">
+<p>Sharbati</p>
+</div>
+
+<div class="card" onclick="selectWheat(this,'Lokwan Wheat')">
+<div class="tick">✔</div>
+<img src="lokwan.jpg">
+<p>Lokwan</p>
+</div>
+
+<div class="card" onclick="selectWheat(this,'Bansi Wheat')">
+<div class="tick">✔</div>
+<img src="bansi.jpg">
+<p>Bansi</p>
+</div>
+
+
+<div class="card" onclick="selectWheat(this,'Durum Wheat')">
+<div class="tick">✔</div>
+<img src="durum.jpg">
+<p>Durum</p>
+</div>
+
+<div class="card" onclick="selectWheat(this,'Organic Wheat')">
+<div class="tick">✔</div>
+<img src="organic.jpg">
+<p>Organic</p>
+</div>
+
+</div>
+
+<p id="selectedWheat">Selected: None</p>
+
+</section>
+
+<!-- ORDER -->
+<section id="order">
+<h2>Order Details</h2>
+
+<input type="number" id="quantity" placeholder="Quantity in KG">
+
+<select id="grind">
+<option>Fine</option>
+<option>Medium</option>
+<option>Coarse</option>
+</select>
+
+<p id="priceDisplay"></p>
+
+<h3>Delivery Address</h3>
+
+<input type="text" id="name" placeholder="Full Name">
+<input type="text" placeholder="House / Flat No">
+<input type="text" placeholder="Colony / Area">
+<input type="text" placeholder="City">
+<input type="text" placeholder="Pincode">
+
+<button onclick="placeOrder()">Place Order</button>
+
+<div id="summary" class="summary"></div>
+
+</section>
+
+<!-- TRACK -->
+<section id="track">
+<h2>Track Your Order</h2>
+
+<input type="text" id="trackId" placeholder="Enter Order ID">
+<button onclick="trackOrder()">Track Order</button>
+
+<div id="trackingStatus"></div>
+
+</section>
+
+<script>
+
+let selected = "";
+let generatedID = "";
+
+function selectWheat(card,type) {
+    selected = type;
+
+    document.querySelectorAll(".tick").forEach(t => t.style.display="none");
+    card.querySelector(".tick").style.display="block";
+
+    document.getElementById("selectedWheat").innerText = "Selected: " + type;
+}
+
+document.getElementById("quantity").addEventListener("input", function() {
+    let qty = this.value;
+    document.getElementById("priceDisplay").innerText =
+    "Estimated Price: ₹" + (qty * 30);
+});
+
+function placeOrder() {
+
+    let qty = document.getElementById("quantity").value;
+    let name = document.getElementById("name").value;
+
+    if (selected=="" || qty=="" || name=="") {
+        alert("Fill all details!");
+        return;
+    }
+
+    let total = qty * 30;
+
+    generatedID = "ORD" + Math.floor(Math.random()*10000);
+
+    document.getElementById("summary").innerHTML =
+    "<h3>Order Receipt</h3>" +
+    "Order ID: " + generatedID + "<br>" +
+    "Name: " + name + "<br>" +
+    "Wheat: " + selected + "<br>" +
+    "Quantity: " + qty + " KG<br>" +
+    "Total: ₹" + total;
+}
+
+
+function trackOrder() {
+
+    let input = document.getElementById("trackId").value;
+
+    if (input === generatedID) {
+        document.getElementById("trackingStatus").innerHTML =
+        "<p style='color:green;'>✔ Order Placed</p>" +
+        "<p style='color:green;'>✔ Processing</p>" +
+        "<p style='color:orange;'>⏳ Out for Delivery</p>" +
+        "<p style='color:gray;'>⬜ Delivered</p>";
+    } else {
+        document.getElementById("trackingStatus").innerHTML =
+        "<p style='color:red;'>❌ Invalid Order ID</p>";
+    }
+}
+</script>
+
+</body>
+</html>
